@@ -21,8 +21,6 @@ Les labyrinthes se construisent et s’enchaînent sans fin. Chaque partie renou
 - Gestion de la faim et de la soif
 - Guide lumineux capable de montrer le chemin et de revenir chercher le joueur
 - Artefacts laissés au passage entre les niveaux
-- Présences furtives à partir des labyrinthes suivants
-- Page d’accueil et panoramas générés localement
 
 ## Jouer
 
@@ -44,19 +42,19 @@ http://localhost:8000/
 
 ## Commandes
 
-| Commande | Action |
-|---|---|
-| `ZQSD` / `WASD` | Se déplacer |
-| Souris | Regarder |
-| `Ctrl gauche` | Courir |
-| `E` | Prendre un objet |
-| `F` | Examiner |
-| Maintenir `Tab` | Ouvrir l’inventaire 3D |
-| Molette ou glissement | Sélectionner un objet |
-| `R` | Boire |
-| `G` | Déposer l’objet sélectionné |
-| `C` | Combiner des objets compatibles |
-| `H` | Activer un objet compatible |
+| Commande              | Action                          |
+| --------------------- | ------------------------------- |
+| `ZQSD` / `WASD`       | Se déplacer                     |
+| Souris                | Regarder                        |
+| `Ctrl gauche`         | Courir                          |
+| `E`                   | Prendre un objet                |
+| `F`                   | Examiner                        |
+| Maintenir `Tab`       | Ouvrir l’inventaire 3D          |
+| Molette ou glissement | Sélectionner un objet           |
+| `R`                   | Boire                           |
+| `G`                   | Déposer l’objet sélectionné     |
+| `C`                   | Combiner des objets compatibles |
+| `H`                   | Activer un objet compatible     |
 
 Le menu radial indique automatiquement les actions disponibles sur l’objet visé ou sélectionné.
 

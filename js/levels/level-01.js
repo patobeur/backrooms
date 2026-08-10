@@ -30,12 +30,20 @@ export const level01 = defineLevel({
   },
   entrance: {
     type: "sealed-wall",
-    graffiti: "pending",
+    graffiti: "assets/porte.png",
   },
   exit: {
     type: "hidden-wall",
     lockedUntilGuide: true,
     opensWhen: "guide-complete",
   },
-  transitions: [],
+  transitions: [{
+    id:"level-01-hidden-exit",
+    type:"wall",
+    source:{level:1,anchor:"hidden-exit"},
+    target:{level:2,anchor:"return-wall"},
+    reversible:true,
+    physicalConnection:false,
+    enabledWhen:"guide-complete",
+  }],
 });

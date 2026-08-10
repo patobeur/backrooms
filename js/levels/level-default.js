@@ -28,6 +28,11 @@ export const levelDefault = Object.freeze({
   audio: Object.freeze({
     ambience: "fluorescent-hum",
   }),
+  placement: Object.freeze({
+    mode: "sequential",
+    x: null,
+    z: null,
+  }),
   objects: Object.freeze([]),
   guide: Object.freeze({
     enabled: false,
@@ -57,6 +62,7 @@ export function defineLevel(overrides) {
     appearance: Object.freeze({...levelDefault.appearance,...overrides.appearance}),
     lighting: Object.freeze({...levelDefault.lighting,...overrides.lighting}),
     audio: Object.freeze({...levelDefault.audio,...overrides.audio}),
+    placement: Object.freeze({...levelDefault.placement,...overrides.placement}),
     guide: Object.freeze({...levelDefault.guide,...overrides.guide}),
     silhouettes: Object.freeze({...levelDefault.silhouettes,...overrides.silhouettes}),
     entrance: Object.freeze({...levelDefault.entrance,...overrides.entrance}),
