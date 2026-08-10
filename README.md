@@ -1,6 +1,10 @@
 # The Backrooms
 
-![Couloirs procéduraux des Backrooms](assets/backrooms-hero.png)
+[![Panorama Backrooms généré aléatoirement](assets/backrooms-ogg.png)](https://patobeur.github.io/backrooms/)
+
+## Jouer en ligne
+
+### [Entrer dans les Backrooms →](https://patobeur.github.io/backrooms/)
 
 Un jeu d’exploration procédurale en vue subjective, plongé dans l’atmosphère inquiétante des Backrooms.
 
