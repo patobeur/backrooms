@@ -1,0 +1,15 @@
+.controls-entry{padding:17px 20px;border:1px solid #d6c65388;background:#0b0b07cc;color:#e7dfaa;font:700 10px monospace;letter-spacing:.14em}
+.controls-entry:hover{border-color:#e8da65;color:#fff5b6}
+.controls-overlay,.pause-menu{position:fixed;z-index:1000;inset:0;display:grid;place-items:center;padding:24px;background:#050503d9;backdrop-filter:blur(8px)}
+.controls-overlay[hidden],.pause-menu[hidden]{display:none}
+.controls-dialog{width:min(780px,94vw);max-height:90vh;display:flex;flex-direction:column;border:1px solid #d6c65388;background:#0c0b07f7;color:#ddd5a0;box-shadow:0 30px 100px #000;padding:22px}
+.controls-dialog>header{display:flex;align-items:flex-start;justify-content:space-between;border-bottom:1px solid #d6c65333;padding-bottom:14px}
+.controls-dialog h2,.pause-menu h2{margin:3px 0 0;color:#eee8bd;font:38px Impact,"Arial Narrow",sans-serif;letter-spacing:.05em}
+.controls-dialog small,.pause-menu small{color:#777151;font:8px monospace;letter-spacing:.18em}
+.controls-dialog>header button{border:0;background:transparent;color:#d6c653;font-size:25px}
+.controls-profiles{display:flex;gap:8px;flex-wrap:wrap;padding:14px 0}.controls-profiles button,.controls-conflict button,.controls-dialog>footer button,.pause-menu button{padding:9px 12px;border:1px solid #d6c65366;background:#17150c;color:#d8cf94;font:700 9px monospace;letter-spacing:.1em}.controls-profiles button.active{background:#d6c653;color:#141308}
+.controls-help,.controls-status,.controls-conflict p,.pause-menu p{color:#8f8969;font:10px monospace;line-height:1.6}.controls-help{margin:0 0 10px}.controls-list{min-height:0;overflow:auto;border-top:1px solid #ffffff0d}
+.controls-row{display:grid;grid-template-columns:minmax(180px,1fr) auto;align-items:center;gap:18px;padding:9px 4px;border-bottom:1px solid #ffffff0d}.controls-row>span{display:flex;flex-direction:column;gap:3px}.controls-row small{color:#5f5a43}.controls-row strong{font:10px monospace;letter-spacing:.08em}.controls-row>div{display:flex;justify-content:flex-end;gap:6px}.controls-row button{min-width:62px;padding:8px;border:1px solid #d6c65366;background:#090805;color:#f0e7a8;font:9px monospace}.controls-row button.awaiting{border-color:#fff3a2;box-shadow:0 0 18px #d6c65355}
+.controls-conflict{margin-top:12px;padding:12px;border:1px solid #d8644f;background:#200b08}.controls-status{min-height:17px;color:#d6c653}.controls-dialog>footer{display:flex;justify-content:flex-end;padding-top:10px}
+.pause-menu section{width:min(440px,90vw);padding:30px;border:1px solid #d6c65388;background:#0c0b07f7;box-shadow:0 25px 90px #000}.pause-menu button{display:block;width:100%;margin-top:9px}.pause-menu #resume-game{background:#d6c653;color:#15140a}
+@media(max-width:620px){.controls-dialog{padding:15px}.controls-row{grid-template-columns:1fr;gap:7px}.controls-row>div{justify-content:flex-start}.controls-row button{flex:1}.controls-entry{width:100%}}

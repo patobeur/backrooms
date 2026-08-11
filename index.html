@@ -25,14 +25,15 @@
 		<link rel="icon" href="assets/favicon.svg" />
 		<link rel="stylesheet" href="assets/styles.css" />
 		<link rel="stylesheet" href="assets/inventory.css" />
+		<link rel="stylesheet" href="assets/controls.css" />
 	</head>
 	<body>
 		<main id="home" class="landing">
 			<header class="nav"
 				><a class="brand" href="#top"
 					><span class="brand-mark">B</span><span>THE BACKROOMS</span
-					><span class="version-badge" aria-label="Version 0.10.2"
-						>v0.10.2</span
+					><span class="version-badge" aria-label="Version 0.11.6"
+						>v0.11.6</span
 					></a
 				><span class="signal"><i></i> SIGNAL INSTABLE</span></header
 			>
@@ -55,6 +56,8 @@
 					<div class="actions"
 						><button id="play" class="play-button"
 							><span>ENTRER DANS LES BACKROOMS</span><b>→</b></button
+						><button id="home-controls" class="controls-entry" type="button"
+							>COMMANDES</button
 						><span class="seed-copy"
 							>CARTE GÉNÉRÉE À CHAQUE PARTIE</span
 						></div
@@ -169,10 +172,10 @@
 					<div
 						><h3>COMMANDES</h3
 						><ul
-							><li><kbd>ZQSD</kbd> Se déplacer</li
+							><li><kbd data-input-movement>ZQSD</kbd> Se déplacer</li
 							><li><kbd>SOURIS</kbd> Regarder</li
-							><li><kbd>E</kbd> Interagir</li
-							><li><kbd>TAB</kbd> Inventaire</li></ul
+							><li><kbd data-input-action="interact">E</kbd> Interagir</li
+							><li><kbd data-input-action="inventory">TAB</kbd> Inventaire</li></ul
 						></div
 					>
 					<div
@@ -197,18 +200,19 @@
 			><header class="hud"
 				><button id="quit">← QUITTER</button
 				><span id="level">LABYRINTHE 1</span><span id="seed">SEED —</span
+				><button id="game-pause">PAUSE</button
 				><button id="sound">SON ON</button></header
 			><div class="crosshair"></div
 			><div id="prompt" class="prompt"
 				><b>CLIQUER POUR EXPLORER</b
-				><span>Souris · ZQSD/WASD · CTRL courir · E interagir</span></div
+				><span>Souris · <b data-input-movement>ZQSD</b> · <b data-input-action="run">CTRL</b> courir · <b data-input-action="interact">E</b> interagir</span></div
 			><div id="radial-menu" class="radial-menu" hidden></div
 			><div id="interaction" class="interaction" hidden></div
 			><div id="notice" class="notice" hidden></div
 			><div class="inventory" id="inventory"
 				><strong>INVENTAIRE <span id="inventory-index"></span></strong
 				><div id="items">Vide</div
-				><small>TAB ouvrir · molette/glisser sélectionner</small></div
+				><small><b data-input-action="inventory">TAB</b> ouvrir · molette/glisser sélectionner</small></div
 			><div class="help"
 				>OBJECTIF<br /><b id="objective">Explorez les lieux</b></div
 			><div class="stats"
@@ -226,6 +230,13 @@
 				><div
 					><h3 id="modal-title"></h3><p id="modal-text"></p
 					><button id="modal-close">FERMER</button></div
+				></div
+			><div id="pause-menu" class="pause-menu" hidden
+				><section><small>EXPLORATION SUSPENDUE</small><h2>PAUSE</h2
+					><p>La partie reste chargée. Aucun état ne progresse.</p
+					><button id="resume-game" type="button">REPRENDRE</button
+					><button id="pause-controls" type="button">COMMANDES</button
+					><button id="pause-home" type="button">RETOUR À L’ACCUEIL</button></section
 				></div
 			></main
 		>

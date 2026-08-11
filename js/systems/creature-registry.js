@@ -26,5 +26,6 @@ export class CreatureManager{
       if(now-instance.spawnedAt>Number(definition.spawn?.duration??8)*1000){this.#remove(index);this.#schedule(level,definition,now);}
     }
   }
+  shiftTimeline(milliseconds){const delta=Math.max(0,Number(milliseconds)||0);for(const[level,time]of this.nextSpawn)if(Number.isFinite(time))this.nextSpawn.set(level,time+delta);for(const instance of this.instances){instance.spawnedAt+=delta;if(instance.seenAt)instance.seenAt+=delta;}}
   clear(){for(let index=this.instances.length-1;index>=0;index--)this.#remove(index);this.nextSpawn.clear();}
 }
