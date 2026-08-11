@@ -1,0 +1,14 @@
+import {createExplorationJournal,JOURNAL_LIMITS} from "./save-schema.js";
+
+const positiveInteger=value=>Math.max(1,Math.floor(Number(value)||1));
+const playTime=value=>Math.max(0,Number(value)||0);
+
+export class ExplorationJournal{
+  constructor(snapshot){this.state=createExplorationJournal(snapshot??{coverage:"complete",coverageStartedAt:0,level:1});}
+  visitLevel(level,elapsed=0){const normalized=positiveInteger(level),existing=this.state.visitedLevels.find(entry=>entry.level===normalized);if(existing)existing.entries++;else{if(this.state.visitedLevels.length>=JOURNAL_LIMITS.visitedLevels)this.state.visitedLevels.shift();this.state.visitedLevels.push({level:normalized,firstVisitedAt:playTime(elapsed),entries:1});}return this;}
+  crossTransition(id,source,target,elapsed=0){const entry={id:String(id||"unknown-transition"),source:positiveInteger(source),target:positiveInteger(target),elapsed:playTime(elapsed)};this.state.transitions.push(entry);if(this.state.transitions.length>JOURNAL_LIMITS.transitions)this.state.transitions.splice(0,this.state.transitions.length-JOURNAL_LIMITS.transitions);return this;}
+  completeMilestone(id,level,elapsed=0,metadata={}){const normalized=String(id||"");if(!normalized||this.state.milestones.some(entry=>entry.id===normalized))return false;this.state.milestones.push({id:normalized,type:String(metadata.type??normalized.split(":")[0]),level:positiveInteger(level),elapsed:playTime(elapsed),metadata:structuredClone(metadata)});if(this.state.milestones.length>JOURNAL_LIMITS.milestones)this.state.milestones.splice(0,this.state.milestones.length-JOURNAL_LIMITS.milestones);return true;}
+  recordResource(type,action,quantity=1,level=null){const resource=String(type||"unknown"),event=String(action||"unknown"),amount=Math.max(0,Number(quantity)||0),state=this.state.resources[resource]??{found:0,taken:0,consumed:0,dropped:0,combined:0};state[event]=Math.max(0,Number(state[event])||0)+amount;if(level!=null)state.lastLevel=positiveInteger(level);this.state.resources[resource]=state;return this;}
+  recordEncounter(type,event,level,elapsed=0){const creature=String(type||"unknown"),name=String(event||"unknown");if(!this.state.encounters[creature]&&Object.keys(this.state.encounters).length>=JOURNAL_LIMITS.encounterTypes)return this;const state=this.state.encounters[creature]??{spawned:0,observed:0,chased:0,vanished:0,levels:{}};state[name]=Math.max(0,Number(state[name])||0)+1;const normalized=positiveInteger(level);state.levels[normalized]=Math.max(0,Number(state.levels[normalized])||0)+1;state.lastEvent=name;state.lastLevel=normalized;state.lastElapsed=playTime(elapsed);this.state.encounters[creature]=state;return this;}
+  snapshot(){return createExplorationJournal(this.state);}
+}

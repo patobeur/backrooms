@@ -38,8 +38,8 @@
 			<header class="nav"
 				><a class="brand" href="#top"
 					><span class="brand-mark">B</span><span>THE BACKROOMS</span
-					><span class="version-badge" aria-label="Version 0.13.5"
-						>v0.13.5</span
+					><span class="version-badge" aria-label="Version 0.14.5.1"
+						>v0.14.5.1</span
 					></a
 				><div class="nav-tools"><div class="locale-switch" role="group" aria-label="Langue" data-i18n-aria="language.label"><button type="button" data-locale="fr" data-i18n="language.fr">FR</button><button type="button" data-locale="en" data-i18n="language.en">EN</button></div><span class="signal"><i></i> <span data-i18n="nav.signal">SIGNAL INSTABLE</span></span></div></header
 			>
@@ -104,6 +104,23 @@
 						>GÉNÉRER UNE NOUVELLE CARTE</button
 					></div
 				>
+			</section>
+
+			<section id="exploration-report" class="exploration-report" hidden aria-labelledby="report-title">
+				<div class="report-stamp" data-report-coverage>ARCHIVES PARTIELLES</div>
+				<header class="report-heading">
+					<div><p class="eyebrow dark" data-i18n="report.eyebrow">DOSSIER DE SURVEILLANCE</p><h2 id="report-title" data-i18n-html="report.title">UN SUJET EST<br><em>TOUJOURS À L’INTÉRIEUR.</em></h2></div>
+					<p data-i18n="report.intro" data-report-intro>Une sauvegarde locale a permis de reconstituer cette transmission. Seuls les faits confirmés sont publiés.</p>
+				</header>
+				<div class="report-summary" data-report-summary></div>
+				<div class="report-grid">
+					<article data-report-section="inventory" hidden><span class="report-index">A</span><h3 data-i18n="report.inventory.title">OBJETS RÉCUPÉRÉS</h3><div data-report-content></div></article>
+					<article data-report-section="route" hidden><span class="report-index">B</span><h3 data-i18n="report.route.title">ROUTE DOCUMENTÉE</h3><div data-report-content></div></article>
+					<article data-report-section="milestones" hidden><span class="report-index">C</span><h3 data-i18n="report.milestones.title">ÉTAPES FRANCHIES</h3><div data-report-content></div></article>
+					<article data-report-section="encounters" hidden><span class="report-index">D</span><h3 data-i18n="report.encounters.title">PRÉSENCES RENCONTRÉES</h3><div data-report-content></div></article>
+					<article data-report-section="resources" hidden><span class="report-index">E</span><h3 data-i18n="report.resources.title">RAPPORT DE RESSOURCES</h3><div data-report-content></div></article>
+				</div>
+				<footer class="report-footer"><span data-report-updated></span><button type="button" class="text-button" id="report-continue" data-i18n="report.continue">REPRENDRE LA TRANSMISSION ↗</button></footer>
 			</section>
 
 			<section

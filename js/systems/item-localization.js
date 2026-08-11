@@ -14,14 +14,17 @@ const ITEM_KEYS=Object.freeze({
 
 export function itemTranslationKeys(type){return ITEM_KEYS[type]??null;}
 
-export function localizeItem(object){
-  const data=object?.userData;if(!data)return object;
-  let keys=ITEM_KEYS[data.type]??(data.nameKey&&data.descriptionKey?[data.nameKey,data.descriptionKey]:null),parameters={};
-  if(data.type==="plush")keys=data.fried?["item.plush.friedName","item.plush.friedDescription"]:data.powered?["item.plush.poweredName","item.plush.poweredDescription"]:ITEM_KEYS.plush;
-  if(data.type==="water_half"||data.type==="water_full"){
+export function resolveItemTranslation(type,data={}){
+  let keys=ITEM_KEYS[type]??(data.nameKey&&data.descriptionKey?[data.nameKey,data.descriptionKey]:null),parameters={};
+  if(type==="plush")keys=data.fried?["item.plush.friedName","item.plush.friedDescription"]:data.powered?["item.plush.poweredName","item.plush.poweredDescription"]:ITEM_KEYS.plush;
+  if(type==="water_half"||type==="water_full"){
     const sips=Math.max(0,Number(data.sips)||0);parameters={sips};
     keys=sips===0?["item.water.emptyName","item.water.emptyDescription"]:sips===1?["item.water.almostEmptyName","item.water.description"]:sips===2?["item.water.halfName","item.water.description"]:["item.water.openName","item.water.description"];
   }
-  if(!keys)return object;
-  data.nameKey=keys[0];data.descriptionKey=keys[1];data.name=translate(keys[0],parameters);data.description=translate(keys[1],parameters);return object;
+  return keys?Object.freeze({nameKey:keys[0],descriptionKey:keys[1],parameters:Object.freeze(parameters)}):null;
+}
+
+export function localizeItem(object){
+  const data=object?.userData;if(!data)return object;const resolved=resolveItemTranslation(data.type,data);if(!resolved)return object;
+  data.nameKey=resolved.nameKey;data.descriptionKey=resolved.descriptionKey;data.name=translate(resolved.nameKey,resolved.parameters);data.description=translate(resolved.descriptionKey,resolved.parameters);return object;
 }

@@ -1,6 +1,8 @@
 export const SAVE_SCHEMA_KIND="backrooms-exploration";
-export const SAVE_SCHEMA_VERSION=1;
+export const SAVE_SCHEMA_VERSION=2;
 export const SAVE_STORAGE_KEY=`backrooms.save.v${SAVE_SCHEMA_VERSION}`;
+export const LEGACY_SAVE_STORAGE_KEYS=Object.freeze(["backrooms.save.v1"]);
+export const JOURNAL_LIMITS=Object.freeze({visitedLevels:128,transitions:256,milestones:256,encounterTypes:64});
 
 const isObject=value=>Boolean(value)&&typeof value==="object"&&!Array.isArray(value);
 const finite=value=>typeof value==="number"&&Number.isFinite(value);
@@ -24,6 +26,9 @@ function itemValid(item){
 }
 
 export function createEmptyLevelSave(){return{objects:[],consumed:[],artifacts:[],doors:[],transitions:[],guide:null,creatures:[],events:[],custom:{}};}
+export function createExplorationJournal({coverage="partial",coverageStartedAt=0,level=1,visitedLevels,transitions=[],milestones=[],resources={},encounters={}}={}){return{coverage:coverage==="complete"?"complete":"partial",coverageStartedAt:Math.max(0,Number(coverageStartedAt)||0),visitedLevels:structuredClone(visitedLevels??[{level:Math.max(1,Math.floor(Number(level)||1)),firstVisitedAt:Math.max(0,Number(coverageStartedAt)||0),entries:1}]).slice(0,JOURNAL_LIMITS.visitedLevels),transitions:structuredClone(transitions).slice(-JOURNAL_LIMITS.transitions),milestones:structuredClone(milestones).slice(-JOURNAL_LIMITS.milestones),resources:structuredClone(resources),encounters:structuredClone(encounters)};}
+
+function journalValid(journal){if(!isObject(journal)||!["partial","complete"].includes(journal.coverage)||!finite(journal.coverageStartedAt)||journal.coverageStartedAt<0||!Array.isArray(journal.visitedLevels)||journal.visitedLevels.length>JOURNAL_LIMITS.visitedLevels||!Array.isArray(journal.transitions)||journal.transitions.length>JOURNAL_LIMITS.transitions||!Array.isArray(journal.milestones)||journal.milestones.length>JOURNAL_LIMITS.milestones||!isObject(journal.resources)||!isObject(journal.encounters)||Object.keys(journal.encounters).length>JOURNAL_LIMITS.encounterTypes)return false;return journal.visitedLevels.every(entry=>isObject(entry)&&integer(entry.level)&&entry.level>0&&finite(entry.firstVisitedAt)&&entry.firstVisitedAt>=0&&integer(entry.entries)&&entry.entries>0);}
 
 export function validateExplorationSave(save){
   const errors=[];
@@ -36,13 +41,14 @@ export function validateExplorationSave(save){
   if(!isObject(player)||!Array.isArray(player.position)||player.position.length!==3||!player.position.every(finite)||!isObject(player.orientation)||!finite(player.orientation.yaw)||!finite(player.orientation.pitch)||!isObject(player.needs)||!finite(player.needs.thirst)||!finite(player.needs.hunger)||player.needs.thirst<0||player.needs.thirst>100||player.needs.hunger<0||player.needs.hunger>100)errors.push("État du joueur invalide.");
   if(!Array.isArray(save.inventory)||!save.inventory.every(itemValid))errors.push("Inventaire invalide.");
   if(!isObject(save.progress)||typeof save.progress.exitOpened!=="boolean"||!Array.isArray(save.progress.doors)||!Array.isArray(save.progress.transitions)||!Array.isArray(save.progress.artifacts)||!(save.progress.guide===null||isObject(save.progress.guide)))errors.push("Progression globale invalide.");
+  if(!journalValid(save.journal))errors.push("Journal d’exploration invalide.");
   if(!isObject(save.levels))errors.push("États des niveaux invalides.");else for(const[level,state]of Object.entries(save.levels)){if(!/^[1-9]\d*$/.test(level)||!isObject(state)||!Array.isArray(state.objects)||!state.objects.every(itemValid)||!Array.isArray(state.consumed)||!Array.isArray(state.artifacts)||!Array.isArray(state.doors)||!Array.isArray(state.transitions)||!Array.isArray(state.creatures)||!Array.isArray(state.events)||!isObject(state.custom))errors.push(`État invalide pour le niveau ${level}.`);}
   inspectSerializable(save,"save",errors,new Set());
   return Object.freeze({valid:errors.length===0,errors:Object.freeze(errors)});
 }
 
-export function createExplorationSave({seed,level=1,elapsed=0,position=[0,1.7,0],yaw=0,pitch=0,thirst=0,hunger=0,inventory=[],progress={},levels={},createdAt=Date.now(),updatedAt=createdAt}={}){
-  const save={kind:SAVE_SCHEMA_KIND,version:SAVE_SCHEMA_VERSION,meta:{createdAt,updatedAt},world:{seed,level,elapsed},player:{position:[...position],orientation:{yaw,pitch},needs:{thirst,hunger}},inventory:structuredClone(inventory),progress:{exitOpened:Boolean(progress.exitOpened),doors:structuredClone(progress.doors??[]),transitions:structuredClone(progress.transitions??[]),guide:progress.guide==null?null:structuredClone(progress.guide),artifacts:structuredClone(progress.artifacts??[])},levels:structuredClone(levels)};
+export function createExplorationSave({seed,level=1,elapsed=0,position=[0,1.7,0],yaw=0,pitch=0,thirst=0,hunger=0,inventory=[],progress={},levels={},journal,createdAt=Date.now(),updatedAt=createdAt}={}){
+  const save={kind:SAVE_SCHEMA_KIND,version:SAVE_SCHEMA_VERSION,meta:{createdAt,updatedAt},world:{seed,level,elapsed},player:{position:[...position],orientation:{yaw,pitch},needs:{thirst,hunger}},inventory:structuredClone(inventory),progress:{exitOpened:Boolean(progress.exitOpened),doors:structuredClone(progress.doors??[]),transitions:structuredClone(progress.transitions??[]),guide:progress.guide==null?null:structuredClone(progress.guide),artifacts:structuredClone(progress.artifacts??[])},levels:structuredClone(levels),journal:createExplorationJournal(journal??{coverage:"partial",coverageStartedAt:elapsed,level})};
   const validation=validateExplorationSave(save);if(!validation.valid)throw new TypeError(validation.errors.join(" | "));return save;
 }
 
@@ -53,6 +59,10 @@ export const SAVE_MIGRATIONS=Object.freeze({
   0(legacy){
     const player=legacy?.player??{};
     return createExplorationSave({seed:legacy?.seed,level:legacy?.level??1,elapsed:legacy?.elapsed??0,position:player.position??[0,1.7,0],yaw:player.yaw??0,pitch:player.pitch??0,thirst:player.thirst??0,hunger:player.hunger??0,inventory:legacy?.inventory??[],progress:legacy?.progress??{},levels:legacy?.levels??{},createdAt:legacy?.createdAt??legacy?.savedAt??Date.now(),updatedAt:legacy?.updatedAt??legacy?.savedAt??Date.now()});
+  },
+  1(legacy){
+    const completed=[...new Set(legacy?.progress?.guide?.completedLevels??[])].filter(level=>Number.isInteger(level)&&level>0).sort((a,b)=>a-b),milestones=completed.map(level=>({id:`guide-complete:${level}`,type:"guide-complete",level,elapsed:null}));if(legacy?.progress?.exitOpened)milestones.push({id:"exit-opened:1",type:"exit-opened",level:1,elapsed:null});
+    return createExplorationSave({seed:legacy.world.seed,level:legacy.world.level,elapsed:legacy.world.elapsed,position:legacy.player.position,yaw:legacy.player.orientation.yaw,pitch:legacy.player.orientation.pitch,thirst:legacy.player.needs.thirst,hunger:legacy.player.needs.hunger,inventory:legacy.inventory,progress:legacy.progress,levels:legacy.levels,journal:{coverage:"partial",coverageStartedAt:legacy.world.elapsed,visitedLevels:[{level:legacy.world.level,firstVisitedAt:legacy.world.elapsed,entries:1}],transitions:[],milestones,resources:{},encounters:{}},createdAt:legacy.meta.createdAt,updatedAt:legacy.meta.updatedAt});
   },
 });
 export function migrateExplorationSave(save){if(save?.version===SAVE_SCHEMA_VERSION)return parseExplorationSave(JSON.stringify(save));const migration=SAVE_MIGRATIONS[save?.version];if(!migration)throw new TypeError(`Aucune migration disponible depuis la version ${save?.version}.`);return migrateExplorationSave(migration(save));}
