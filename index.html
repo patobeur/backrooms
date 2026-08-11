@@ -4,24 +4,30 @@
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width,initial-scale=1" />
 		<meta name="theme-color" content="#111108" />
-		<title>The Backrooms — Expérience procédurale</title>
+		<title data-i18n="meta.title">The Backrooms — Expérience procédurale</title>
 		<meta
 			name="description"
-			content="Explorez un labyrinthe Backrooms infini et unique, généré à chaque partie." />
+			content="Explorez un labyrinthe Backrooms infini et unique, généré à chaque partie." data-i18n-content="meta.description" />
 		<meta name="robots" content="index, follow" />
 		<meta
 			property="og:title"
-			content="The Backrooms — Expérience procédurale" />
+			content="The Backrooms — Expérience procédurale" data-i18n-content="meta.title" />
 		<meta
 			property="og:description"
-			content="Explorez un labyrinthe Backrooms infini et unique, généré à chaque partie." />
-		<meta property="og:locale" content="fr_FR" />
-		<meta property="og:image" content="assets/backrooms-ogg.png" />
+			content="Explorez un labyrinthe Backrooms infini et unique, généré à chaque partie." data-i18n-content="meta.description" />
+		<meta property="og:locale" content="fr_FR" data-i18n-content="meta.locale" />
+		<meta property="og:url" content="https://patobeur.github.io/backrooms/" />
+		<meta property="og:image" content="https://patobeur.github.io/backrooms/assets/backrooms-ogg.png" />
+		<meta property="og:image:secure_url" content="https://patobeur.github.io/backrooms/assets/backrooms-ogg.png" />
+		<meta property="og:image:type" content="image/png" />
+		<meta property="og:image:width" content="1618" />
+		<meta property="og:image:height" content="903" />
 		<meta
 			property="og:image:alt"
-			content="Couloirs jaunes inquiétants des Backrooms" />
+			content="Couloirs jaunes inquiétants des Backrooms" data-i18n-content="meta.imageAlt" />
 		<meta property="og:type" content="website" />
 		<meta name="twitter:card" content="summary_large_image" />
+		<meta name="twitter:image" content="https://patobeur.github.io/backrooms/assets/backrooms-ogg.png" />
 		<link rel="icon" href="assets/favicon.svg" />
 		<link rel="stylesheet" href="assets/styles.css" />
 		<link rel="stylesheet" href="assets/inventory.css" />
@@ -32,65 +38,69 @@
 			<header class="nav"
 				><a class="brand" href="#top"
 					><span class="brand-mark">B</span><span>THE BACKROOMS</span
-					><span class="version-badge" aria-label="Version 0.11.6"
-						>v0.11.6</span
+					><span class="version-badge" aria-label="Version 0.13.5"
+						>v0.13.5</span
 					></a
-				><span class="signal"><i></i> SIGNAL INSTABLE</span></header
+				><div class="nav-tools"><div class="locale-switch" role="group" aria-label="Langue" data-i18n-aria="language.label"><button type="button" data-locale="fr" data-i18n="language.fr">FR</button><button type="button" data-locale="en" data-i18n="language.en">EN</button></div><span class="signal"><i></i> <span data-i18n="nav.signal">SIGNAL INSTABLE</span></span></div></header
 			>
 			<section class="hero" id="top"
 				><iframe
 					class="hero-generator"
 					src="canvas/index.html"
-					title="Fond Backrooms généré aléatoirement"
+					title="Fond Backrooms généré aléatoirement" data-i18n-title="hero.backgroundTitle"
 					aria-hidden="true"
 					tabindex="-1"></iframe
 				><div class="hero-shade"></div><div class="grain"></div
 				><div class="hero-content">
-					<p class="eyebrow">EXPÉRIENCE PROCÉDURALE — NIVEAU 0</p
-					><h1>NE VOUS<br />RETOURNEZ <em>PAS.</em></h1>
-					<p class="hero-intro"
+					<p class="eyebrow" data-i18n="hero.eyebrow">EXPÉRIENCE PROCÉDURALE — NIVEAU 0</p
+					><h1 data-i18n-html="hero.title">NE VOUS<br />RETOURNEZ <em>PAS.</em></h1>
+					<p class="hero-intro" data-i18n="hero.intro"
 						>Vous avez glissé hors de la réalité. Devant vous, des
 						kilomètres de murs jaunis, de néons qui bourdonnent et de
 						couloirs impossibles.</p
 					>
 					<div class="actions"
 						><button id="play" class="play-button"
-							><span>ENTRER DANS LES BACKROOMS</span><b>→</b></button
+							><span data-i18n="hero.play">ENTRER DANS LES BACKROOMS</span><b>→</b></button
+						><button id="continue-game" class="play-button continue-button" type="button" hidden
+							><span data-i18n="hero.continue">CONTINUER L’EXPLORATION</span><b>↪</b></button
 						><button id="home-controls" class="controls-entry" type="button"
-							>COMMANDES</button
+							 data-i18n="hero.controls">COMMANDES</button
+						><button id="delete-save" class="controls-entry danger-entry" type="button" hidden
+							 data-i18n="hero.deleteSave">SUPPRIMER LA SAUVEGARDE</button
 						><span class="seed-copy"
-							>CARTE GÉNÉRÉE À CHAQUE PARTIE</span
+							id="save-summary" data-i18n="hero.generated">CARTE GÉNÉRÉE À CHAQUE PARTIE</span
 						></div
 					> </div
-				><div class="scroll-cue"><span>FAITES DÉFILER</span><i></i></div
+				><div class="scroll-cue"><span data-i18n="hero.scroll">FAITES DÉFILER</span><i></i></div
 			></section>
 
 			<section class="brief" id="incident"
 				><div class="brief-number">01</div
 				><div
-					><p class="eyebrow dark">RAPPORT D'INCIDENT</p
-					><h2>UN ENDROIT QUI<br />N'EXISTE <em>PAS.</em></h2></div
+					><p class="eyebrow dark" data-i18n="incident.eyebrow">RAPPORT D'INCIDENT</p
+					><h2 data-i18n-html="incident.title">UN ENDROIT QUI<br />N'EXISTE <em>PAS.</em></h2></div
 				>
 				<div class="brief-copy"
-					><p
+					><p data-i18n="incident.p1"
 						>Si vous ne faites pas attention et que vous sortez de la
 						réalité au mauvais endroit, vous finirez dans les
 						Backrooms.</p
-					><p
+					><p data-i18n="incident.p2"
 						>Chaque exploration crée une architecture nouvelle. Aucun plan
 						à mémoriser. Aucun chemin réellement sûr.</p
-					><button class="text-button launch-game"
+					><button class="text-button launch-game" data-i18n="incident.start"
 						>COMMENCER L'EXPLORATION ↗</button
 					></div
 				>
 				<div class="evidence"
-					><div class="map-title">CARTE TOPOGRAPHIQUE</div
+					><div class="map-title" data-i18n="map.title">CARTE TOPOGRAPHIQUE</div
 					><div class="map-frame"
 						><canvas id="maze-map" width="560" height="560"></canvas
 						><span id="map-document"
 							>DOCUMENT #------ — ORIGINE INCONNUE</span
 						></div
-					><button id="regenerate-map" class="map-button"
+					><button id="regenerate-map" class="map-button" data-i18n="map.regenerate"
 						>GÉNÉRER UNE NOUVELLE CARTE</button
 					></div
 				>
@@ -102,40 +112,40 @@
 				aria-labelledby="panorama-title"
 				><div class="panorama-heading"
 					><div
-						><p class="eyebrow">ARCHIVE VISUELLE — CAPTURE INSTABLE</p
-						><h2 id="panorama-title"
+						><p class="eyebrow" data-i18n="panorama.eyebrow">ARCHIVE VISUELLE — CAPTURE INSTABLE</p
+						><h2 id="panorama-title" data-i18n-html="panorama.title"
 							>UN HORIZON<br />SANS <em>FIN.</em></h2
 						></div
-					><p
+					><p data-i18n="panorama.text"
 						>Cette image n'existait pas avant votre arrivée. Rechargez la
 						page : les couloirs auront déjà changé.</p
 					></div
 				><div class="panorama-frame"
 					><iframe
 						src="canvas/index.html"
-						title="Panorama Backrooms généré aléatoirement"
+						title="Panorama Backrooms généré aléatoirement" data-i18n-title="panorama.frameTitle"
 						tabindex="-1"></iframe
 					><div class="panorama-overlay"></div
-					><span>CAPTURE PROCÉDURALE / SOURCE INCONNUE</span></div
+					><span data-i18n="panorama.caption">CAPTURE PROCÉDURALE / SOURCE INCONNUE</span></div
 				></section
 			>
 
 			<section class="brief protocol" id="protocole"
 				><div class="brief-number">02</div
 				><div
-					><p class="eyebrow dark">PROTOCOLE DE SURVIE</p
-					><h2
+					><p class="eyebrow dark" data-i18n="protocol.eyebrow">PROTOCOLE DE SURVIE</p
+					><h2 data-i18n-html="protocol.title"
 						>SI VOUS L'ENTENDEZ,<br />IL VOUS A DÉJÀ <em>VU.</em></h2
 					></div
 				><div class="brief-copy"
-					><p
+					><p data-i18n="protocol.p1"
 						>L'odeur pestilentielle de moquette humide et le bourdonnement
 						électrique des néons ne sont pas vos pires ennemis ici.</p
-					><p
+					><p data-i18n="protocol.p2"
 						>Vous n'êtes pas seul. Si vous percevez un bruit qui se
 						démarque de l'ambiance, fuyez. Ne cherchez pas à
 						comprendre.</p
-					><button class="text-button launch-game"
+					><button class="text-button launch-game" data-i18n="protocol.cross"
 						>FRANCHIR LE SEUIL ↗</button
 					></div
 				></section
@@ -143,54 +153,54 @@
 
 			<footer class="site-footer"
 				><div class="footer-signal"
-					><span>TRANSMISSION #<b id="landing-seed">------</b></span
-					><i></i><span>NIVEAU 0 — CONNEXION NON SÉCURISÉE</span></div
+					><span><span data-i18n="footer.transmission">TRANSMISSION #</span><b id="landing-seed">------</b></span
+					><i></i><span data-i18n="footer.connection">NIVEAU 0 — CONNEXION NON SÉCURISÉE</span></div
 				><div class="footer-callout"
 					><div
-						><p class="eyebrow">LE SEUIL EST ENCORE OUVERT</p
-						><h2>PRÊT À<br /><em>DISPARAÎTRE ?</em></h2></div
+						><p class="eyebrow" data-i18n="footer.eyebrow">LE SEUIL EST ENCORE OUVERT</p
+						><h2 data-i18n-html="footer.title">PRÊT À<br /><em>DISPARAÎTRE ?</em></h2></div
 					><button id="play-footer" class="play-button"
-						><span>LANCER L'EXPLORATION</span><b>→</b></button
+						><span data-i18n="footer.play">LANCER L'EXPLORATION</span><b>→</b></button
 					></div
 				><div class="footer-grid">
 					<div class="footer-brand"
 						><a class="brand" href="#top"
 							><span class="brand-mark">B</span
 							><span>THE BACKROOMS</span></a
-						><p
+						><p data-i18n="footer.about"
 							>Une expérience d'exploration procédurale. Chaque couloir,
 							chaque détour et chaque sortie sont générés au moment où
 							vous entrez.</p
 						></div
 					>
-					<nav aria-label="Navigation du pied de page"
-						><h3>ARCHIVES</h3><a href="#top">Accueil</a
-						><a href="#incident">Rapport d'incident</a
-						><a href="#archives">Captures visuelles</a
-						><a href="#protocole">Protocole de survie</a></nav
+					<nav aria-label="Navigation du pied de page" data-i18n-aria="footer.navigationLabel"
+						><h3 data-i18n="footer.archives">ARCHIVES</h3><a href="#top" data-i18n="footer.home">Accueil</a
+						><a href="#incident" data-i18n="footer.incident">Rapport d'incident</a
+						><a href="#archives" data-i18n="footer.captures">Captures visuelles</a
+						><a href="#protocole" data-i18n="footer.protocol">Protocole de survie</a></nav
 					>
 					<div
-						><h3>COMMANDES</h3
+						><h3 data-i18n="footer.controls">COMMANDES</h3
 						><ul
-							><li><kbd data-input-movement>ZQSD</kbd> Se déplacer</li
-							><li><kbd>SOURIS</kbd> Regarder</li
-							><li><kbd data-input-action="interact">E</kbd> Interagir</li
-							><li><kbd data-input-action="inventory">TAB</kbd> Inventaire</li></ul
+							><li><kbd data-input-movement>ZQSD</kbd> <span data-i18n="footer.move">Se déplacer</span></li
+							><li><kbd>SOURIS</kbd> <span data-i18n="footer.look">Regarder</span></li
+							><li><kbd data-input-action="interact">E</kbd> <span data-i18n="footer.interact">Interagir</span></li
+							><li><kbd data-input-action="inventory">TAB</kbd> <span data-i18n="footer.inventory">Inventaire</span></li></ul
 						></div
 					>
 					<div
-						><h3>SYSTÈME</h3
+						><h3 data-i18n="footer.system">SYSTÈME</h3
 						><ul
-							><li>Labyrinthes infinis</li
-							><li>Audio procédural</li
-							><li>Seed active : <span id="system-seed">------</span></li
-							><li>Génération locale</li></ul
+							><li data-i18n="footer.mazes">Labyrinthes infinis</li
+							><li data-i18n="footer.audio">Audio procédural</li
+							><li><span data-i18n="footer.seed">Seed active :</span> <span id="system-seed">------</span></li
+							><li data-i18n="footer.local">Génération locale</li></ul
 						></div
 					> </div
 				><div class="footer-bottom"
-					><span>© 2026 PATOBEUR — EXPÉRIENCE EXPÉRIMENTALE</span
-					><span>NE RESTEZ PAS IMMOBILE.</span
-					><a href="#top">RETOUR EN HAUT ↑</a></div
+					><span data-i18n="footer.copyright">© 2026 PATOBEUR — EXPÉRIENCE EXPÉRIMENTALE</span
+					><span data-i18n="footer.warning">NE RESTEZ PAS IMMOBILE.</span
+					><a href="#top" data-i18n="footer.top">RETOUR EN HAUT ↑</a></div
 				></footer
 			>
 		</main>
@@ -198,29 +208,29 @@
 		<main id="game" hidden
 			><div id="viewport"></div><div class="noise"></div
 			><header class="hud"
-				><button id="quit">← QUITTER</button
+				><button id="quit" data-i18n="game.quit">← QUITTER</button
 				><span id="level">LABYRINTHE 1</span><span id="seed">SEED —</span
-				><button id="game-pause">PAUSE</button
+				><button id="game-pause" data-i18n="game.pause">PAUSE</button
 				><button id="sound">SON ON</button></header
 			><div class="crosshair"></div
 			><div id="prompt" class="prompt"
-				><b>CLIQUER POUR EXPLORER</b
-				><span>Souris · <b data-input-movement>ZQSD</b> · <b data-input-action="run">CTRL</b> courir · <b data-input-action="interact">E</b> interagir</span></div
+				><b data-i18n="game.clickExplore">CLIQUER POUR EXPLORER</b
+				><span data-i18n-dynamic="game.prompt">Souris · <b data-input-movement>ZQSD</b> · <b data-input-action="run">CTRL</b> courir · <b data-input-action="interact">E</b> interagir</span></div
 			><div id="radial-menu" class="radial-menu" hidden></div
 			><div id="interaction" class="interaction" hidden></div
 			><div id="notice" class="notice" hidden></div
 			><div class="inventory" id="inventory"
-				><strong>INVENTAIRE <span id="inventory-index"></span></strong
+				><strong><span data-i18n="game.inventory">INVENTAIRE</span> <span id="inventory-index"></span></strong
 				><div id="items">Vide</div
-				><small><b data-input-action="inventory">TAB</b> ouvrir · molette/glisser sélectionner</small></div
+				><small data-i18n-dynamic="game.inventoryHelp"><b data-input-action="inventory">TAB</b> ouvrir · molette/glisser sélectionner</small></div
 			><div class="help"
-				>OBJECTIF<br /><b id="objective">Explorez les lieux</b></div
+				><span data-i18n="game.objective">OBJECTIF</span><br /><b id="objective">Explorez les lieux</b></div
 			><div class="stats"
-				><span>LABYRINTHES <b id="traversed">0</b></span
-				><span>SOIF <b id="thirst">0%</b></span
-				><span>FAIM <b id="hunger">0%</b></span
-				><span>TEMPS <b id="time">00:00</b></span></div
-			><button id="new-run" class="new-run">↻ NOUVELLE SUITE</button
+				><span><span data-i18n="game.stats.mazes">LABYRINTHES</span> <b id="traversed">0</b></span
+				><span><span data-i18n="game.stats.thirst">SOIF</span> <b id="thirst">0%</b></span
+				><span><span data-i18n="game.stats.hunger">FAIM</span> <b id="hunger">0%</b></span
+				><span><span data-i18n="game.stats.time">TEMPS</span> <b id="time">00:00</b></span></div
+			><button id="new-run" class="new-run" data-i18n="game.newRun">↻ NOUVELLE SUITE</button
 			><div class="mobile-pad"
 				><button data-move="forward">▲</button
 				><button data-move="left">◀</button
@@ -229,14 +239,17 @@
 			><div id="modal" class="modal" hidden
 				><div
 					><h3 id="modal-title"></h3><p id="modal-text"></p
-					><button id="modal-close">FERMER</button></div
+					><button id="modal-close" data-i18n="game.modal.close">FERMER</button></div
 				></div
 			><div id="pause-menu" class="pause-menu" hidden
-				><section><small>EXPLORATION SUSPENDUE</small><h2>PAUSE</h2
-					><p>La partie reste chargée. Aucun état ne progresse.</p
-					><button id="resume-game" type="button">REPRENDRE</button
-					><button id="pause-controls" type="button">COMMANDES</button
-					><button id="pause-home" type="button">RETOUR À L’ACCUEIL</button></section
+				><section><small data-i18n="game.pause.eyebrow">EXPLORATION SUSPENDUE</small><h2 data-i18n="game.pause">PAUSE</h2
+					><p data-i18n="game.pause.text">La partie reste chargée. Aucun état ne progresse.</p
+					><button id="resume-game" type="button" data-i18n="game.pause.resume">REPRENDRE</button
+					><button id="pause-save" type="button" data-i18n="game.pause.save">SAUVEGARDER MAINTENANT</button
+					><button id="pause-load" type="button" data-i18n="game.pause.load">REPRENDRE LA SAUVEGARDE</button
+					><button id="pause-controls" type="button" data-i18n="game.pause.controls">COMMANDES</button
+					><button id="pause-home" type="button" data-i18n="game.pause.home">RETOUR À L’ACCUEIL</button
+					><p id="save-status" class="save-status" aria-live="polite"></p></section
 				></div
 			></main
 		>

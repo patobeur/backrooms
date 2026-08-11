@@ -1,5 +1,7 @@
 .controls-entry{padding:17px 20px;border:1px solid #d6c65388;background:#0b0b07cc;color:#e7dfaa;font:700 10px monospace;letter-spacing:.14em}
 .controls-entry:hover{border-color:#e8da65;color:#fff5b6}
+.nav-tools,.locale-switch{display:flex;align-items:center;gap:10px}.locale-switch{gap:3px}.locale-switch button{padding:5px 7px;border:1px solid #d6c65344;background:#0b0b07aa;color:#777151;font:700 8px monospace}.locale-switch button.active{border-color:#d6c653;color:#fff5b6;background:#27230e}
+.continue-button{background:#ece6bb}.continue-button[hidden]{display:none}.danger-entry{border-color:#9d3e35;color:#df8e7e}.seed-copy#save-summary{max-width:310px;line-height:1.6}.save-status{min-height:16px;margin:12px 0 0!important;color:#d8cf94!important}.pause-menu #pause-load[disabled]{opacity:.38;cursor:not-allowed}
 .controls-overlay,.pause-menu{position:fixed;z-index:1000;inset:0;display:grid;place-items:center;padding:24px;background:#050503d9;backdrop-filter:blur(8px)}
 .controls-overlay[hidden],.pause-menu[hidden]{display:none}
 .controls-dialog{width:min(780px,94vw);max-height:90vh;display:flex;flex-direction:column;border:1px solid #d6c65388;background:#0c0b07f7;color:#ddd5a0;box-shadow:0 30px 100px #000;padding:22px}

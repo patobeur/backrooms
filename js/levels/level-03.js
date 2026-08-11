@@ -3,6 +3,7 @@ import {defineLevel} from "./level-default.js";
 export const level03=defineLevel({
   id:3,
   name:"Derrière la porte",
+  nameKey:"level.3.name",
   maze:{width:17,height:17,cellSize:5,roomProfile:"mixed",roomCount:5,roomSize:[3,6],corridorBias:.2,wallDensity:.64,architecture:{columnsChance:.8}},
   placement:{mode:"physical-door",sourceLevel:2,sourceEdge:"south"},
   objects:[

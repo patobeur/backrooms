@@ -3,6 +3,7 @@ import { defineLevel } from "./level-default.js";
 export const level01 = defineLevel({
 	id: 1,
 	name: "Le seuil jaune",
+	nameKey: "level.1.name",
 	maze: {
 		width: 17,
 		height: 17,

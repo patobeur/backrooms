@@ -1,11 +1,12 @@
 import * as THREE from "../../vendor/three.module.min.js";
 import {findMazePath} from "../maze.js";
 import {disposeObjectTree} from "./resource-disposal.js";
+import {translate} from "./i18n.js";
 
 const registry=new Map();
 export function registerCreature(id,factory){if(registry.has(id))throw new Error(`Créature déjà enregistrée : ${id}`);if(typeof factory!=="function")throw new TypeError(`Fabrique invalide pour ${id}`);registry.set(id,factory);}
 export function listCreatureTypes(){return[...registry.keys()];}
-export function createCreature(id){const factory=registry.get(id);if(!factory)throw new Error(`Type de créature inconnu : ${id}`);const object=factory();object.userData={...object.userData,creatureType:id};return object;}
+export function createCreature(id){const factory=registry.get(id);if(!factory)throw new Error(`Type de créature inconnu : ${id}`);const object=factory(),nameKey=`creature.${id}.name`;object.userData={...object.userData,creatureType:id,nameKey,name:translate(nameKey)};return object;}
 
 function watcher(){const group=new THREE.Group(),material=new THREE.MeshBasicMaterial({color:0x010101,fog:true}),body=new THREE.Mesh(new THREE.CapsuleGeometry(.22,1.35,6,10),material),head=new THREE.Mesh(new THREE.SphereGeometry(.2,12,10),material),armGeometry=new THREE.CapsuleGeometry(.055,1.35,4,8),leftArm=new THREE.Mesh(armGeometry,material),rightArm=leftArm.clone();body.position.y=1.05;body.scale.set(.72,1,.48);head.position.set(0,2.02,0);head.rotation.z=.16;leftArm.position.set(-.28,1.05,0);leftArm.rotation.z=.08;rightArm.position.set(.28,1.05,0);rightArm.rotation.z=-.08;group.add(body,head,leftArm,rightArm);return group;}
 registerCreature("watcher",watcher);

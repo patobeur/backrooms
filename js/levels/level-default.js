@@ -3,6 +3,7 @@ import {DEFAULT_MAZE} from "../config.js";
 export const levelDefault = Object.freeze({
   id: 0,
   name: "Niveau sans nom",
+  nameKey: "level.default.name",
   maze: Object.freeze({
     width: DEFAULT_MAZE.width,
     height: DEFAULT_MAZE.height,

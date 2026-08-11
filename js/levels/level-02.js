@@ -3,6 +3,7 @@ import {defineLevel} from "./level-default.js";
 export const level02=defineLevel({
   id:2,
   name:"L’autre côté",
+  nameKey:"level.2.name",
   maze:{width:17,height:17,cellSize:5,roomProfile:"small",roomCount:2,roomSize:[2,3],corridorBias:.84,wallDensity:.98,architecture:{columnsChance:.15}},
   placement:{mode:"isolated",x:10000,z:10000},
   objects:[
