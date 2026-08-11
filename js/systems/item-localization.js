@@ -16,7 +16,8 @@ export function itemTranslationKeys(type){return ITEM_KEYS[type]??null;}
 
 export function resolveItemTranslation(type,data={}){
   let keys=ITEM_KEYS[type]??(data.nameKey&&data.descriptionKey?[data.nameKey,data.descriptionKey]:null),parameters={};
-  if(type==="plush")keys=data.fried?["item.plush.friedName","item.plush.friedDescription"]:data.powered?["item.plush.poweredName","item.plush.poweredDescription"]:ITEM_KEYS.plush;
+  if(type==="plush")keys=data.fried?["item.plush.friedName",data.batteryExtracted||!data.containedBattery?"item.plush.friedEmptyDescription":"item.plush.friedDescription"]:data.powered?["item.plush.poweredName","item.plush.poweredDescription"]:ITEM_KEYS.plush;
+  if(type==="battery"&&data.recoveredFromPlush)keys=["item.battery.name","item.battery.recoveredDescription"];
   if(type==="water_half"||type==="water_full"){
     const sips=Math.max(0,Number(data.sips)||0);parameters={sips};
     keys=sips===0?["item.water.emptyName","item.water.emptyDescription"]:sips===1?["item.water.almostEmptyName","item.water.description"]:sips===2?["item.water.halfName","item.water.description"]:["item.water.openName","item.water.description"];

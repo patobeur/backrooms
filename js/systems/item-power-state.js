@@ -16,8 +16,8 @@ function embeddedBattery(data,plushId){
 }
 
 export function normalizePlushPowerData(data={}){
-  const explicit=Object.values(PLUSH_POWER_STATES).includes(data.powerState)?data.powerState:null,legacyState=data.fried?PLUSH_POWER_STATES.FRIED:data.powered?PLUSH_POWER_STATES.BATTERY_INSTALLED:PLUSH_POWER_STATES.EMPTY,state=data.fried?PLUSH_POWER_STATES.FRIED:data.powered&&(!explicit||explicit===PLUSH_POWER_STATES.EMPTY)?PLUSH_POWER_STATES.BATTERY_INSTALLED:explicit??legacyState,requiresBattery=state!==PLUSH_POWER_STATES.EMPTY&&!data.batteryExtracted;
-  return{...data,powerState:state,powered:state!==PLUSH_POWER_STATES.EMPTY,fried:state===PLUSH_POWER_STATES.FRIED,batteryExtracted:Boolean(data.batteryExtracted),containedBattery:data.containedBattery?embeddedBattery(data.containedBattery,data.instanceId):requiresBattery?embeddedBattery({},data.instanceId):null};
+  const explicit=Object.values(PLUSH_POWER_STATES).includes(data.powerState)?data.powerState:null,legacyState=data.fried?PLUSH_POWER_STATES.FRIED:data.powered?PLUSH_POWER_STATES.BATTERY_INSTALLED:PLUSH_POWER_STATES.EMPTY,state=data.fried?PLUSH_POWER_STATES.FRIED:data.powered&&(!explicit||explicit===PLUSH_POWER_STATES.EMPTY)?PLUSH_POWER_STATES.BATTERY_INSTALLED:explicit??legacyState,extracted=Boolean(data.batteryExtracted),requiresBattery=state!==PLUSH_POWER_STATES.EMPTY&&!extracted,containedBattery=data.containedBattery?embeddedBattery(data.containedBattery,data.instanceId):requiresBattery?embeddedBattery({},data.instanceId):null;
+  return{...data,powerState:state,powered:Boolean(containedBattery)&&state!==PLUSH_POWER_STATES.EMPTY,fried:state===PLUSH_POWER_STATES.FRIED,batteryExtracted:extracted,containedBattery};
 }
 
 export function installBatteryInPlush(plushData,batteryData){
@@ -34,4 +34,10 @@ export function burnOutPlush(plushData,cost=PLUSH_ACTIVATION_COST){
   const plush=normalizePlushPowerData(plushData);if(plush.powerState!==PLUSH_POWER_STATES.POWERED||!plush.containedBattery)return{changed:false,data:plush};
   const battery=embeddedBattery(plush.containedBattery,plush.instanceId),spent=Math.max(0,finite(cost,PLUSH_ACTIVATION_COST));battery.energy.charge=clamp(battery.energy.charge-spent,0,battery.energy.capacity);
   return{changed:true,remainingCharge:battery.energy.charge,data:{...plush,powerState:PLUSH_POWER_STATES.FRIED,powered:true,fried:true,batteryExtracted:false,containedBattery:battery}};
+}
+
+export function extractBatteryFromPlush(plushData){
+  const plush=normalizePlushPowerData(plushData);if(plush.powerState!==PLUSH_POWER_STATES.FRIED||plush.batteryExtracted||!plush.containedBattery)return{changed:false,data:plush,battery:null};
+  const battery=embeddedBattery(plush.containedBattery,plush.instanceId);
+  return{changed:true,battery,data:{...plush,powered:false,fried:true,batteryExtracted:true,containedBattery:null}};
 }
