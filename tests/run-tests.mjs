@@ -1,7 +1,7 @@
 import * as THREE from "../vendor/three.module.min.js";
 import {TransitionManager} from "../js/systems/transition-manager.js";
 import {LevelManager} from "../js/systems/level-manager.js";
-import {createDoorAssembly,DoorController} from "../js/systems/door.js";
+import {createDoorAssembly,createDoorHeadWall,DoorController} from "../js/systems/door.js";
 import {createItem} from "../js/systems/item-registry.js";
 import {snapshotItem,restoreItem} from "../js/systems/item-persistence.js";
 import {createLevelLighting} from "../js/systems/level-lighting.js";
@@ -21,6 +21,8 @@ test("faux mur : passage vers le niveau 2 et retour",()=>{const manager=new Leve
 test("porte physique : niveau 2 vers 3 et retour",()=>{const manager=new LevelManager(525252),two=manager.ensure(2),three=manager.ensure(3),x=two.originX+(two.maze.exitColumn+.5)*two.maze.cellSize,z=two.bounds.maxZ;assert(Math.abs(z-three.bounds.minZ)<1e-9,"sols désalignés");assert(manager.findByPosition(x,z-.01)?.levelNumber===2,"côté niveau 2 absent");assert(manager.findByPosition(x,z+.01)?.levelNumber===3,"côté niveau 3 absent");});
 
 test("porte : contraste, ouverture, fermeture et sécurité en mouvement",()=>{const assembly=createDoorAssembly({width:2,height:2}),controller=new DoorController(assembly,{maxAngle:Math.PI/2,duration:1000,playerRadius:.15}),panelColor=assembly.doorPanel.material.color,frameColor=assembly.leftPost.material.color,contrast=Math.hypot(panelColor.r-frameColor.r,panelColor.g-frameColor.g,panelColor.b-frameColor.b);assert(panelColor.getHex()===0xe7e3d5,"panneau de porte non blanc");assert(contrast>.55,"cadre insuffisamment contrasté");controller.open(0);controller.update(1000,{x:5,z:5});assert(!controller.moving&&controller.angle===controller.maxAngle,"ouverture incomplète");controller.close(1100);controller.update(2100,{x:5,z:5});assert(controller.angle===0,"fermeture incomplète");controller.open(2200);controller.update(2700,{x:-.292893,z:.707107});assert(controller.blocked&&!controller.moving,"joueur traversé");assembly.dispose();});
+
+test("porte : mur de tête raccordé au plafond sans collision basse",()=>{const material=new THREE.MeshStandardMaterial(),head=createDoorHeadWall({width:2.35,openingHeight:2.48,wallHeight:3.25,depth:.13,material}),size=new THREE.Vector3(),epsilon=1e-6;head.geometry.computeBoundingBox();head.geometry.boundingBox.getSize(size);assert(Math.abs(size.y-.77)<epsilon,"hauteur de remplissage incorrecte");assert(Math.abs(head.position.y+size.y/2-3.25)<epsilon,"remplissage non raccordé au plafond");assert(Math.abs(head.position.y-size.y/2-2.48)<epsilon,"remplissage non raccordé au linteau");assert(head.userData.nonBlocking===true,"mur de tête ajouté aux collisions basses");head.geometry.dispose();material.dispose();});
 
 test("objet : inventaire et état persistants",()=>{const item=createItem("water_half",{userData:{instanceId:"test-water",level:1}}),inventory=[item],manager=new LevelManager(626262);item.userData.sips=0;item.userData.name="BOUTEILLE VIDE";for(let level=1;level<=8;level++){manager.setActive(level);manager.streamingWindow();}assert(inventory[0]===item&&inventory[0].userData.sips===0,"inventaire modifié");const restored=restoreItem(snapshotItem(item));assert(restored.userData.instanceId==="test-water"&&restored.userData.sips===0,"état au sol perdu");disposeObjectTree(item);disposeObjectTree(restored);});
 
@@ -49,4 +51,4 @@ const missingDebugSession=await loadOptionalDebug(Object.freeze({}),{search:"?de
 assert(missingDebugSession.requested&&!missingDebugSession.loaded&&unavailableReported&&debugImports===1,"module debug absent non contenu");
 missingDebugSession.dispose();
 console.log("✓ production ?debug=1 : module absent sans blocage");
-console.log("\n11 scénarios de parcours et 2 scénarios d’absence debug validés.");
+console.log("\n12 scénarios de parcours et 2 scénarios d’absence debug validés.");

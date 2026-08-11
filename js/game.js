@@ -5,7 +5,7 @@ import {PLAYER,CAMERA,ARCHITECTURE,RENDERING,INTERACTION} from "./config.js";
 import {getLevelConfig} from "./levels/index.js";
 import {LevelManager} from "./systems/level-manager.js";
 import {TransitionManager} from "./systems/transition-manager.js";
-import {createDoorAssembly,DoorController,HINGE_SIDES,SWING_DIRECTIONS} from "./systems/door.js";
+import {createDoorAssembly,createDoorHeadWall,DoorController,HINGE_SIDES,SWING_DIRECTIONS} from "./systems/door.js";
 import {createItem,expandObjectRules} from "./systems/item-registry.js";
 import {createLevelLighting} from "./systems/level-lighting.js";
 import {CreatureManager} from "./systems/creature-registry.js";
@@ -60,7 +60,7 @@ function createGame(){
     if(data.index===1&&!physicalDoors.length){
       const doorWidth=Math.min(2.35,data.cellSize*.55),doorX=data.originX+(data.exitColumn+.5)*data.cellSize,doorZ=data.originZ+data.worldLength,sideWidth=(data.cellSize-doorWidth)/2;
       wall(doorX-(doorWidth+sideWidth)/2,doorZ,true,sideWidth);wall(doorX+(doorWidth+sideWidth)/2,doorZ,true,sideWidth);
-      const assembly=createDoorAssembly({width:doorWidth,height:2.35,frameThickness:.13,frameDepth:.2,hingeSide:HINGE_SIDES.LEFT,swingDirection:SWING_DIRECTIONS.INWARD});assembly.doorFrame.position.set(doorX,0,doorZ);assembly.doorFrame.userData={id:"physical-door-2-3",icon:"🚪",name:"PORTE BLANCHE",description:"Une porte blanche ordinaire, sauf qu’un autre labyrinthe continue derrière.",interactable:true};scene.add(assembly.doorFrame);interactables.push(assembly.doorFrame);
+      const doorHeight=2.35,frameThickness=.13,assembly=createDoorAssembly({width:doorWidth,height:doorHeight,frameThickness,frameDepth:.2,hingeSide:HINGE_SIDES.LEFT,swingDirection:SWING_DIRECTIONS.INWARD}),headWall=createDoorHeadWall({width:doorWidth,openingHeight:doorHeight+frameThickness,wallHeight:ARCHITECTURE.wallHeight,depth:ARCHITECTURE.wallThickness,material:wallMaterial});assembly.doorFrame.position.set(doorX,0,doorZ);assembly.doorFrame.userData={id:"physical-door-2-3",icon:"🚪",name:"PORTE BLANCHE",description:"Une porte blanche ordinaire, sauf qu’un autre labyrinthe continue derrière.",interactable:true};headWall.position.x=doorX;headWall.position.z=doorZ;headWall.userData.level=data.index+1;group.add(headWall);scene.add(assembly.doorFrame);interactables.push(assembly.doorFrame);
       const controller=new DoorController(assembly,{duration:1350,playerRadius:PLAYER.collisionRadius,onHandle:()=>audio.doorHandle(),onCreak:()=>audio.doorCreak(),onBlocked:()=>showNotice("QUELQUE CHOSE BLOQUE LA PORTE",1500)});physicalDoors.push({sourceLevel:2,targetLevel:3,assembly,controller});
     }
     const floor=new THREE.Mesh(new THREE.PlaneGeometry(data.worldWidth,data.worldLength),floorMaterial);floor.rotation.x=-Math.PI/2;floor.position.set(data.originX+data.worldWidth/2,0,data.originZ+data.worldLength/2);group.add(floor);

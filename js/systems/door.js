@@ -7,6 +7,14 @@ export const DOOR_ACTIONS=Object.freeze({OPEN:"OUVRIR",CLOSE:"FERMER"});
 function positive(value,label){const number=Number(value);if(!Number.isFinite(number)||number<=0)throw new TypeError(`${label} doit être un nombre positif.`);return number;}
 function choice(value,values,label){if(!values.includes(value))throw new TypeError(`${label} invalide : ${value}`);return value;}
 
+export function createDoorHeadWall({width,openingHeight,wallHeight,depth=.13,material}={}){
+  width=positive(width,"width");openingHeight=positive(openingHeight,"openingHeight");wallHeight=positive(wallHeight,"wallHeight");depth=positive(depth,"depth");
+  const height=wallHeight-openingHeight;if(height<=0)throw new RangeError("wallHeight doit dépasser openingHeight.");
+  material??=new THREE.MeshStandardMaterial({color:0xb7a64f,roughness:.95});
+  const mesh=new THREE.Mesh(new THREE.BoxGeometry(width,height,depth),material);mesh.name="doorHeadWall";mesh.position.y=openingHeight+height/2;mesh.userData={architectureFeature:"door-head-wall",nonBlocking:true};
+  return mesh;
+}
+
 export function createDoorAssembly({
   width=1.15,
   height=2.2,
