@@ -23,8 +23,8 @@ export function createDoorAssembly({
   hingeSide=choice(hingeSide,Object.values(HINGE_SIDES),"hingeSide");swingDirection=choice(swingDirection,Object.values(SWING_DIRECTIONS),"swingDirection");
 
   const ownsFrameMaterial=!frameMaterial,ownsPanelMaterial=!panelMaterial;
-  frameMaterial??=new THREE.MeshStandardMaterial({color:0x6e5a24,roughness:.92});
-  panelMaterial??=new THREE.MeshStandardMaterial({color:0xb5a64d,roughness:.96});
+  frameMaterial??=new THREE.MeshStandardMaterial({color:0x3b3428,roughness:.88});
+  panelMaterial??=new THREE.MeshStandardMaterial({color:0xe7e3d5,roughness:.82});
 
   const doorFrame=new THREE.Group();doorFrame.name="doorFrame";
   const uprightGeometry=new THREE.BoxGeometry(frameThickness,height+frameThickness,frameDepth),topGeometry=new THREE.BoxGeometry(width+frameThickness*2,frameThickness,frameDepth);
