@@ -2,7 +2,7 @@ export const SAVE_SCHEMA_KIND="backrooms-exploration";
 export const SAVE_SCHEMA_VERSION=2;
 export const SAVE_STORAGE_KEY=`backrooms.save.v${SAVE_SCHEMA_VERSION}`;
 export const LEGACY_SAVE_STORAGE_KEYS=Object.freeze(["backrooms.save.v1"]);
-export const JOURNAL_LIMITS=Object.freeze({visitedLevels:128,transitions:256,milestones:256,encounterTypes:64});
+export const JOURNAL_LIMITS=Object.freeze({visitedLevels:128,transitions:256,milestones:256,resourceTypes:128,encounterTypes:64});
 
 const isObject=value=>Boolean(value)&&typeof value==="object"&&!Array.isArray(value);
 const finite=value=>typeof value==="number"&&Number.isFinite(value);
@@ -26,9 +26,10 @@ function itemValid(item){
 }
 
 export function createEmptyLevelSave(){return{objects:[],consumed:[],artifacts:[],doors:[],transitions:[],guide:null,creatures:[],events:[],custom:{}};}
-export function createExplorationJournal({coverage="partial",coverageStartedAt=0,level=1,visitedLevels,transitions=[],milestones=[],resources={},encounters={}}={}){return{coverage:coverage==="complete"?"complete":"partial",coverageStartedAt:Math.max(0,Number(coverageStartedAt)||0),visitedLevels:structuredClone(visitedLevels??[{level:Math.max(1,Math.floor(Number(level)||1)),firstVisitedAt:Math.max(0,Number(coverageStartedAt)||0),entries:1}]).slice(0,JOURNAL_LIMITS.visitedLevels),transitions:structuredClone(transitions).slice(-JOURNAL_LIMITS.transitions),milestones:structuredClone(milestones).slice(-JOURNAL_LIMITS.milestones),resources:structuredClone(resources),encounters:structuredClone(encounters)};}
+const limitedRecord=(record,limit)=>Object.fromEntries(Object.entries(structuredClone(record)).slice(-limit));
+export function createExplorationJournal({coverage="partial",coverageStartedAt=0,level=1,visitedLevels,transitions=[],milestones=[],resources={},encounters={}}={}){return{coverage:coverage==="complete"?"complete":"partial",coverageStartedAt:Math.max(0,Number(coverageStartedAt)||0),visitedLevels:structuredClone(visitedLevels??[{level:Math.max(1,Math.floor(Number(level)||1)),firstVisitedAt:Math.max(0,Number(coverageStartedAt)||0),entries:1}]).slice(0,JOURNAL_LIMITS.visitedLevels),transitions:structuredClone(transitions).slice(-JOURNAL_LIMITS.transitions),milestones:structuredClone(milestones).slice(-JOURNAL_LIMITS.milestones),resources:limitedRecord(resources,JOURNAL_LIMITS.resourceTypes),encounters:limitedRecord(encounters,JOURNAL_LIMITS.encounterTypes)};}
 
-function journalValid(journal){if(!isObject(journal)||!["partial","complete"].includes(journal.coverage)||!finite(journal.coverageStartedAt)||journal.coverageStartedAt<0||!Array.isArray(journal.visitedLevels)||journal.visitedLevels.length>JOURNAL_LIMITS.visitedLevels||!Array.isArray(journal.transitions)||journal.transitions.length>JOURNAL_LIMITS.transitions||!Array.isArray(journal.milestones)||journal.milestones.length>JOURNAL_LIMITS.milestones||!isObject(journal.resources)||!isObject(journal.encounters)||Object.keys(journal.encounters).length>JOURNAL_LIMITS.encounterTypes)return false;return journal.visitedLevels.every(entry=>isObject(entry)&&integer(entry.level)&&entry.level>0&&finite(entry.firstVisitedAt)&&entry.firstVisitedAt>=0&&integer(entry.entries)&&entry.entries>0);}
+function journalValid(journal){if(!isObject(journal)||!["partial","complete"].includes(journal.coverage)||!finite(journal.coverageStartedAt)||journal.coverageStartedAt<0||!Array.isArray(journal.visitedLevels)||journal.visitedLevels.length>JOURNAL_LIMITS.visitedLevels||!Array.isArray(journal.transitions)||journal.transitions.length>JOURNAL_LIMITS.transitions||!Array.isArray(journal.milestones)||journal.milestones.length>JOURNAL_LIMITS.milestones||!isObject(journal.resources)||Object.keys(journal.resources).length>JOURNAL_LIMITS.resourceTypes||!isObject(journal.encounters)||Object.keys(journal.encounters).length>JOURNAL_LIMITS.encounterTypes)return false;return journal.visitedLevels.every(entry=>isObject(entry)&&integer(entry.level)&&entry.level>0&&finite(entry.firstVisitedAt)&&entry.firstVisitedAt>=0&&integer(entry.entries)&&entry.entries>0);}
 
 export function validateExplorationSave(save){
   const errors=[];
