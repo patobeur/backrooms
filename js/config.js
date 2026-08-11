@@ -29,6 +29,8 @@ export const ARCHITECTURE = Object.freeze({
 
 export const RENDERING = Object.freeze({
   wallDistance: 50,
+  wallSafetyMargin: 20,
+  wallHysteresis: 5,
   maxPixelRatio: 1.6,
   interactionRefreshFrames: 3,
 });

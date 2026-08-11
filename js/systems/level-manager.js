@@ -1,5 +1,6 @@
 import {generateMazeChunk,nextChunkOriginX} from "../maze.js";
 import {getLevelConfig} from "../levels/index.js";
+import {SpatialPlanner} from "./spatial-planner.js";
 
 export class LevelManager {
   constructor(worldSeed,{getConfig=getLevelConfig,generate=generateMazeChunk}={}){
@@ -11,6 +12,7 @@ export class LevelManager {
     this.activeLevel=1;
     this.previousLevel=null;
     this.nextLevel=2;
+    this.spatialPlanner=new SpatialPlanner();
   }
 
   ensure(levelNumber){
@@ -21,8 +23,9 @@ export class LevelManager {
       return existing;
     }
     if(normalized>1)this.ensure(normalized-1);
-    const previous=this.records.get(normalized-1),config=this.getConfig(normalized),isolated=config.placement?.mode==="isolated",originX=isolated?Number(config.placement.x):previous?nextChunkOriginX(previous.maze,config.maze):0,originZ=isolated?Number(config.placement.z):previous?previous.bounds.maxZ:0,index=normalized-1,maze=this.generate(index,originX,this.worldSeed,config.maze,originZ),record={levelNumber:normalized,index,config,originX,originZ,maze,bounds:{minX:originX,maxX:originX+maze.worldWidth,minZ:originZ,maxZ:originZ+maze.worldLength}};
+    const previous=this.records.get(normalized-1),config=this.getConfig(normalized),isolated=config.placement?.mode==="isolated",physicalDoor=config.placement?.mode==="physical-door",sourceRecord=physicalDoor?this.ensure(config.placement.sourceLevel??normalized-1):null,sourceAnchor=sourceRecord?{position:{x:sourceRecord.originX+(sourceRecord.maze.exitColumn+.5)*sourceRecord.maze.cellSize,y:0,z:sourceRecord.bounds.maxZ},yaw:0}:null,physicalPlacement=sourceAnchor?this.spatialPlanner.findDoorPlacement({sourceAnchor,mazeConfig:config.maze,sourceLevel:sourceRecord.levelNumber,targetLevel:normalized,orientations:[0]}):null,originX=physicalPlacement?physicalPlacement.originX:isolated?Number(config.placement.x):previous?nextChunkOriginX(previous.maze,config.maze):0,originZ=physicalPlacement?physicalPlacement.originZ:isolated?Number(config.placement.z):previous?previous.bounds.maxZ:0,index=normalized-1,maze=this.generate(index,originX,this.worldSeed,config.maze,originZ),record={levelNumber:normalized,index,config,originX,originZ,rotation:physicalPlacement?.rotation??0,physicalPlacement,maze,bounds:{minX:originX,maxX:originX+maze.worldWidth,minZ:originZ,maxZ:originZ+maze.worldLength}};
     this.records.set(normalized,record);
+    if(!this.spatialPlanner.reservations.has(`level:${normalized}`))this.spatialPlanner.reserve(`level:${normalized}`,record.bounds,{levelNumber:normalized});
     return record;
   }
 
@@ -37,6 +40,8 @@ export class LevelManager {
   }
 
   prepareNext(levelNumber){this.nextLevel=Math.max(1,Math.floor(levelNumber));return this.ensure(this.nextLevel);}
+
+  findPhysicalPlacement({sourceLevel,sourceAnchor,targetLevel,clearance=0,orientations}={}){const config=this.getConfig(targetLevel);return this.spatialPlanner.findDoorPlacement({sourceAnchor,mazeConfig:config.maze,sourceLevel,targetLevel,clearance,orientations});}
 
   getActive(){return this.ensure(this.activeLevel);}
 
@@ -56,5 +61,5 @@ export class LevelManager {
 
   getLoadedRecords(){return[...this.loaded].sort((a,b)=>a-b).map(number=>this.ensure(number));}
 
-  clear(){this.records.clear();this.loaded.clear();this.activeLevel=1;this.previousLevel=null;this.nextLevel=2;}
+  clear(){this.records.clear();this.loaded.clear();this.spatialPlanner.clear();this.activeLevel=1;this.previousLevel=null;this.nextLevel=2;}
 }

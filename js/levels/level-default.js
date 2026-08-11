@@ -8,6 +8,11 @@ export const levelDefault = Object.freeze({
     height: DEFAULT_MAZE.height,
     cellSize: DEFAULT_MAZE.cellSize,
     roomProfile: "small",
+    roomCount: 3,
+    roomSize: Object.freeze([2,3]),
+    corridorBias: 0.35,
+    wallDensity: 0.9,
+    architecture: Object.freeze({columnsChance:0}),
   }),
   appearance: Object.freeze({
     background: 0x111009,
@@ -21,12 +26,20 @@ export const levelDefault = Object.freeze({
   }),
   lighting: Object.freeze({
     enabled: true,
+    mode: "uniform",
     spacing: 4,
     intensity: 2.7,
     distance: 13,
+    ambientIntensity: 0.62,
+    color: null,
+    panelColor: null,
+    zones: Object.freeze([]),
   }),
   audio: Object.freeze({
     ambience: "fluorescent-hum",
+    volume: 1,
+    transitionSeconds: 1.4,
+    events: Object.freeze([]),
   }),
   placement: Object.freeze({
     mode: "sequential",
@@ -38,10 +51,7 @@ export const levelDefault = Object.freeze({
     enabled: false,
     leavesArtifact: false,
   }),
-  silhouettes: Object.freeze({
-    enabled: false,
-    startLevel: Number.POSITIVE_INFINITY,
-  }),
+  creatures: Object.freeze([]),
   entrance: Object.freeze({
     type: "open",
     graffiti: null,
@@ -64,7 +74,7 @@ export function defineLevel(overrides) {
     audio: Object.freeze({...levelDefault.audio,...overrides.audio}),
     placement: Object.freeze({...levelDefault.placement,...overrides.placement}),
     guide: Object.freeze({...levelDefault.guide,...overrides.guide}),
-    silhouettes: Object.freeze({...levelDefault.silhouettes,...overrides.silhouettes}),
+    creatures: Object.freeze([...(overrides.creatures||levelDefault.creatures)]),
     entrance: Object.freeze({...levelDefault.entrance,...overrides.entrance}),
     exit: Object.freeze({...levelDefault.exit,...overrides.exit}),
     objects: Object.freeze([...(overrides.objects||levelDefault.objects)]),

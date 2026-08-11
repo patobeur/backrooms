@@ -58,6 +58,16 @@ http://localhost:8000/
 
 Le menu radial indique automatiquement les actions disponibles sur l’objet visé ou sélectionné.
 
+## Tests
+
+Le jeu reste entièrement statique. Node.js est uniquement facultatif pour exécuter la suite de validation du dépôt :
+
+```bash
+node tests/run-tests.mjs
+```
+
+Elle contrôle les passages aller-retour, la porte physique, la persistance des objets, les ambiances propres aux niveaux et la stabilité d’une longue session.
+
 ## Publication statique
 
 Publiez directement l’ensemble des fichiers et dossiers présents à côté de ce README.
@@ -76,6 +86,7 @@ placez tout le contenu de ce dossier dans le répertoire correspondant sur le se
 ├── assets/                 Styles, icône et image sociale
 ├── canvas/                 Générateur visuel des panoramas
 ├── js/                     Jeu, accueil, audio et labyrinthes
+├── tests/                  Tests automatisés du parcours
 ├── vendor/                 Three.js embarqué localement
 ├── index.html              Page d’accueil et jeu
 └── README.md
