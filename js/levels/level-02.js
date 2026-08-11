@@ -7,7 +7,7 @@ export const level02=defineLevel({
   maze:{width:17,height:17,cellSize:5,roomProfile:"small",roomCount:2,roomSize:[2,3],corridorBias:.84,wallDensity:.98,architecture:{columnsChance:.15}},
   placement:{mode:"isolated",x:10000,z:10000},
   objects:[
-    {id:"water_full",quantity:2,placement:{strategy:"route",from:.18,to:.64,height:.05,lateral:[-.55,.5]}},
+    {id:"water_bottle",quantity:2,userData:{container:{capacity:4,units:4,unitKind:"water-dose",reloadable:true,containerKind:"bottle"}},placement:{strategy:"route",from:.18,to:.64,height:.05,lateral:[-.55,.5]}},
     {id:"book_blue",quantity:1,placement:{strategy:"route",progress:.78,height:.03,lateral:.4}},
   ],
   lighting:{mode:"flicker",spacing:4,intensity:2.45,distance:12,ambientIntensity:.34,color:0xffe082,panelColor:0xffefad},

@@ -17,9 +17,9 @@ export const level01 = defineLevel({
 	},
 	objects: [
 		{ id: "plush", progress: 0.02, height: 0.08, lateral: -0.65 },
-		{ id: "water_full", progress: 0.035, height: 0.05, lateral: 0.7 },
+		{ id: "water_bottle", instanceId:"water-bottle-full", progress: 0.035, height: 0.05, lateral: 0.7, userData:{container:{capacity:4,units:4,unitKind:"water-dose",reloadable:true,containerKind:"bottle"}} },
 		{ id: "book_red", progress: 0.16, height: 0.03, lateral: -0.45 },
-		{ id: "water_half", progress: 0.28, height: 0.05, lateral: 0.45 },
+		{ id: "water_bottle", instanceId:"water-bottle-half", progress: 0.28, height: 0.05, lateral: 0.45, userData:{container:{capacity:4,units:2,unitKind:"water-dose",reloadable:true,containerKind:"bottle"}} },
 		{ id: "book_green", progress: 0.4, height: 0.03, lateral: 0.45 },
 		{ id: "battery", progress: 0.55, height: 0.06, lateral: 0 },
 		{ id: "book_blue", progress: 0.68, height: 0.03, lateral: -0.45 },

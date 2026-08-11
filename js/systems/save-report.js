@@ -1,6 +1,7 @@
 import {resolveItemTranslation} from "./item-localization.js";
 import {createExplorationSaveStorage} from "./save-storage.js";
 import {validateExplorationSave} from "./save-schema.js";
+import {reconcileUnitContainers} from "./item-unit-migration.js";
 
 const freezeArray=value=>Object.freeze(value.map(entry=>Object.freeze(entry)));
 
@@ -10,7 +11,7 @@ function inventoryReport(inventory){
     const snapshot=inventory[index],data=snapshot.userData??{},instanceId=data.instanceId??`${snapshot.type}:${index}`;
     if(seen.has(instanceId))continue;seen.add(instanceId);
     const translation=resolveItemTranslation(snapshot.type,data);
-    entries.push({instanceId,type:snapshot.type,level:Number(data.level)||null,nameKey:translation?.nameKey??data.nameKey??null,descriptionKey:translation?.descriptionKey??data.descriptionKey??null,parameters:translation?.parameters??Object.freeze({}),state:Object.freeze({powered:Boolean(data.powered),fried:Boolean(data.fried),sips:Number.isFinite(data.sips)?data.sips:null,guideReward:Boolean(data.guideReward)})});
+    entries.push({instanceId,type:snapshot.type,level:Number(data.level)||null,nameKey:translation?.nameKey??data.nameKey??null,descriptionKey:translation?.descriptionKey??data.descriptionKey??null,parameters:translation?.parameters??Object.freeze({}),state:Object.freeze({powered:Boolean(data.powered),fried:Boolean(data.fried),container:data.container?Object.freeze({...data.container}):null,guideReward:Boolean(data.guideReward)})});
   }
   return freezeArray(entries);
 }
@@ -25,11 +26,12 @@ function milestoneReport(save,inventory){
 
 function resourceReport(inventory,needs,journal){
   const carried={};let waterSips=0,artifacts=0;
-  for(const item of inventory){carried[item.type]=(carried[item.type]??0)+1;if(Number.isFinite(item.state.sips))waterSips+=Math.max(0,item.state.sips);if(item.type==="artifact")artifacts++;}
+  for(const item of inventory){carried[item.type]=(carried[item.type]??0)+1;if(item.type==="water_bottle"&&Number.isFinite(item.state.container?.units))waterSips+=Math.max(0,item.state.container.units);if(item.type==="artifact")artifacts++;}
   return Object.freeze({carried:Object.freeze(carried),waterSips,artifacts,thirst:needs.thirst,hunger:needs.hunger,history:Object.freeze({...journal?.resources}),historyCoverage:journal?.coverage==="complete"?"confirmed":"partial"});
 }
 
 export function buildSaveReport(save){
+  save=reconcileUnitContainers(save).save;
   const validation=validateExplorationSave(save);if(!validation.valid)return null;
   const inventory=inventoryReport(save.inventory),milestones=milestoneReport(save,inventory),doors=freezeArray(save.progress.doors.map((door,index)=>({id:`door:${door.sourceLevel??"unknown"}:${door.targetLevel??"unknown"}:${index}`,sourceLevel:door.sourceLevel??null,targetLevel:door.targetLevel??null,state:Number(door.angle)>0?"open":"closed",confidence:"confirmed"})));
   const journal=save.journal,route=freezeArray((journal?.visitedLevels?.length?journal.visitedLevels:[{level:save.world.level,firstVisitedAt:save.world.elapsed,entries:1}]).map(entry=>({id:`level:${entry.level}`,level:entry.level,type:entry.level===save.world.level?"current-level":"visited-level",firstVisitedAt:entry.firstVisitedAt,entries:entry.entries,confidence:"confirmed"}))),transitions=freezeArray((journal?.transitions??[]).map((entry,index)=>({id:entry.id??`transition:${index}`,...entry,confidence:"confirmed"}))),encounters=freezeArray(Object.entries(journal?.encounters??{}).map(([type,state])=>({type,...state,confidence:"confirmed"})));
