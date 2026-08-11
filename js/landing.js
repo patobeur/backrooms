@@ -2,6 +2,7 @@ import {generateMazeChunk,MAZE_SIZE} from "./maze.js";
 import {getLocale,initI18n,subscribeLocale,translate} from "./systems/i18n.js";
 import {readSaveReport} from "./systems/save-report.js";
 import {deterministicReportVariant,formatReportDate,formatReportNumber,reportPluralKey} from "./systems/report-presentation.js";
+import {renderUnitIndicator} from "./systems/unit-indicator.js";
 
 initI18n(document);
 
@@ -26,7 +27,7 @@ document.querySelector("#regenerate-map").addEventListener("click",()=>drawMap(M
 const reportSection=document.querySelector("#exploration-report");
 const reportElement=(tag,className,text)=>{const node=document.createElement(tag);if(className)node.className=className;if(text!==undefined)node.textContent=String(text);return node;};
 function formatReportDuration(seconds){const minutes=Math.max(0,Math.floor((Number(seconds)||0)/60)),hours=Math.floor(minutes/60),rest=minutes%60;return hours?translate("game.duration.hours",{hours,minutes:rest}):translate("game.duration.minutes",{minutes});}
-function reportList(rows){const list=reportElement("ul","report-list");for(const row of rows){const item=reportElement("li");item.append(reportElement("span","report-list-primary",row.primary));if(row.doses){const meter=reportElement("span","report-dose-meter");meter.setAttribute("role","img");meter.setAttribute("aria-label",translate("report.inventory.doses",{count:row.doses.value,max:row.doses.max}));for(let index=0;index<row.doses.max;index++)meter.append(reportElement("i",index<row.doses.value?"filled":""));item.append(meter);}if(row.secondary)item.append(reportElement("small","",row.secondary));list.append(item);}return list;}
+function reportList(rows){const list=reportElement("ul","report-list");for(const row of rows){const item=reportElement("li");item.append(reportElement("span","report-list-primary",row.primary));if(row.units)item.append(renderUnitIndicator(row.units,{label:translate("unit.indicator.label",{units:row.units.units,capacity:row.units.capacity})}));if(row.secondary)item.append(reportElement("small","",row.secondary));list.append(item);}return list;}
 function fillReportSection(name,content){const article=reportSection?.querySelector(`[data-report-section="${name}"]`);if(!article)return;const slot=article.querySelector("[data-report-content]");slot.replaceChildren();article.hidden=!content;if(content)slot.append(content);}
 function reportStat(label,value){const node=reportElement("div","report-stat");node.append(reportElement("small","",label),reportElement("strong","",value));return node;}
 function renderExplorationReport(){
@@ -44,7 +45,7 @@ function renderExplorationReport(){
     reportStat(translate("report.stat.inventory"),formatReportNumber(report.inventory.length,locale)),
     reportStat(translate("report.stat.status"),translate(weak?"report.status.weak":"report.status.stable"))
   );
-  fillReportSection("inventory",report.sections.inventory?reportList(report.inventory.map(item=>({primary:item.nameKey?translate(item.nameKey,item.parameters):item.type,doses:item.type==="water_bottle"&&Number.isFinite(item.state.container?.units)?{value:Math.max(0,Math.min(item.state.container.capacity,item.state.container.units)),max:item.state.container.capacity}:null,secondary:item.level?translate("report.inventory.origin",{level:item.level}):""}))):null);
+  fillReportSection("inventory",report.sections.inventory?reportList(report.inventory.map(item=>({primary:item.nameKey?translate(item.nameKey,item.parameters):item.type,units:item.state.container??null,secondary:item.level?translate("report.inventory.origin",{level:item.level}):""}))):null);
   fillReportSection("route",report.sections.route&&!report.unavailable.includes("route-history")?reportList(report.route.map(entry=>({primary:translate("report.route.entry",{level:formatReportNumber(entry.level,locale)}),secondary:translate(reportPluralKey("report.route.visits",entry.entries,locale),{count:formatReportNumber(entry.entries,locale)})}))):null);
   fillReportSection("milestones",report.sections.milestones?reportList(report.milestones.map(entry=>{const key=`report.milestone.${entry.type}`,translated=translate(key,{level:entry.level??report.subject.level});return{primary:translated===key?translate("report.milestone.generic"):translated};})):null);
   fillReportSection("encounters",report.sections.encounters&&!report.unavailable.includes("encounter-history")?reportList(report.encounters.map(entry=>{const nameKey=`creature.${entry.type}.name`,name=translate(nameKey),observed=entry.observed??0,chased=entry.chased??0;return{primary:translate("report.encounter.name",{name:name===nameKey?entry.type:name}),secondary:`${translate(reportPluralKey("report.encounter.observed",observed,locale),{count:formatReportNumber(observed,locale)})} · ${translate(reportPluralKey("report.encounter.chased",chased,locale),{count:formatReportNumber(chased,locale)})}`};})):null);
